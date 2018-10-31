@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!--scan="true"  自动扫描配置文件 修改配置文件后不需要服务器重启
+    scanPeriod="60 seconds"  自动扫描配置文件间隔时间
+    debug="false"   服务台不显示日志-->
+    <!--定义参数常量-->
+    <!--trance<debug<info<warn<error-->
+    <!--logger.tran("msg")  logger.debug....-->
+    <property name="log.level" value="DEBUG"/>
+    <!--历史日志存放时间-->
+    <property name="log.maxHistory" value="30"/>
+    <!--${catalina.base} tomcat根目录实例-->
+    <property name="log.filePath" value="E:/Idea_workspace/logs/webapps"/>
+    <!--%d{yyyy-MM-dd HH:mm:ss:SSS}  时间
+    [%thead]  线程
+    %-5level  级别  向左显示5个字符宽度
+    %logger{50}  类  50个字符
+    %msg   日志信息  %n  换行符
+    -->
+<!--
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} [%thead] %-5level %logger{50} - %msg%n"/>
+-->
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"/>
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--debug-->
+    <appender name="debugAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--文件路径-->
+        <file>${log.filePath}/debug/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件名称-->
+            <fileNamePattern>${log.filePath}/debug/debug.%d{yyyy-mm-dd}.log.gz</fileNamePattern>
+            <!--文件最大历史保存数量-->
+            <maxHistory>${log.maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--INFO-->
+    <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--文件路径-->
+        <file>${log.filePath}/info/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件名称-->
+            <fileNamePattern>${log.filePath}/info/info.%d{yyyy-mm-dd}.log.gz</fileNamePattern>
+            <!--文件最大历史保存数量-->
+            <maxHistory>${log.maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--ERROR-->
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--文件路径-->
+        <file>${log.filePath}/error/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件名称-->
+            <fileNamePattern>${log.filePath}/error/error.%d{yyyy-mm-dd}.log.gz</fileNamePattern>
+            <!--文件最大历史保存数量-->
+            <maxHistory>${log.maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--<logger name="com.xl" level="${log.level}" additivity="false">
+        <appender-ref ref="debugAppender"/>
+        <appender-ref ref="infoAppender"/>
+        <appender-ref ref="errorAppender"/>
+    </logger>-->
+
+    <!--<logger name="com.xl" level="ERROR"/>
+    <logger name="java.sql.Connection" level="ERROR"/>
+    <logger name="java.sql.Statement" level="ERROR"/>
+    <logger name="java.sql.PreparedStatement" level="ERROR"/>-->
+
+    <root level="INFO">
+        <appender-ref ref="consoleAppender"/>
+    </root>
+
+
+</configuration>

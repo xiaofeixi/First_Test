@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xl.dao.ShopDao">
+    <!--int insertShop(Shop shop);-->
+    <!-- <insert id="insertShop" useGeneratedKeys="true" keyColumn="shop_id"
+            keyProperty="shopId">-->
+    <insert id="insertShop"  useGeneratedKeys="true" keyColumn="shop_id" keyProperty="shopId">
+        insert into tb_shop(OWNER_ID,AREA_ID,SHOP_CATEGORY_ID,SHOP_NAME,SHOP_DESC,SHOP_ADDR,
+        PHONE,SHOP_IMG,PRIORITY,CREATE_TIME,LAST_EDIT_TIME,ENABLE_STATUS,ADVICE)
+        values(#{owner.userId},#{area.areaId},#{shopCategory.shopCategoryId},#{shopName},
+		#{shopDesc},#{shopAddr},#{phone},#{shopImg},#{priority},#{createTime},#{lastEditTime},
+		#{enableStatus},#{advice})
+    </insert>
+    <!--//更新店铺
+    int updateShop(Shop shop);-->
+    <update id="updateShop" parameterType="Shop">
+        update tb_shop
+        <set>
+            <if test="shopName != null "> shop_name=#{shopName},</if>
+            <if test="shopDesc != null "> shop_desc=#{shopDesc},</if>
+            <if test="shopAddr != null "> shop_addr=#{shopAddr},</if>
+            <if test="phone != null "> phone=#{phone},</if>
+            <if test="shopImg != null "> shop_img=#{shopImg},</if>
+            <if test="priority != null "> priority=#{priority},</if>
+            <if test="lastEditTime != null "> last_edit_time=#{lastEditTime},</if>
+            <if test="enableStatus != null "> enable_status=#{enableStatus},</if>
+            <if test="area != null "> area_id=#{area.areaId},</if>
+            <if test="advice != null "> advice=#{advice},</if>
+            <if test="shopCategory != null "> shop_category_id=#{shopCategory.shopCategoryId}</if>
+
+        </set>
+        where shop_id=#{shopId}
+    </update>
+
+
+    <resultMap id="shopMap" type="com.xl.model.Shop">
+        <id property="shopId" column="shop_id"></id>
+        <result property="shopName" column="shop_name"/>
+        <result property="shopDesc" column="shop_desc"/>
+        <result property="shopAddr" column="shop_addr"/>
+        <result property="phone" column="phone"/>
+        <result property="shopImg" column="shop_img"/>
+        <result property="priority" column="priority"/>
+        <result property="createTime" column="create_time"/>
+        <result property="lastEditTime" column="last_edit_time"/>
+        <result property="enableStatus" column="enable_status"/>
+        <result property="advice" column="advice"/>
+        <result property="createTime" column="create_time"/>
+        <collection property="area" ofType="Area" column="area_id">
+            <id property="areaId" column="area_id"></id>
+            <result property="areaName" column="area_name"/>
+            <result property="priority" column="areapriority"/>
+            <result property="creatTime" column="areacreatTime"/>
+            <result property="lastEditTime" column="arealast_edit_time"/>
+        </collection>
+        <collection property="owner" ofType="PersonInfo" column="owner_id">
+            <id property="userId" column="owner_id"></id>
+            <result property="name" column="name"/>
+            <result property="profileImg" column="profile_img"/>
+            <result property="email" column="email"/>
+            <result property="gender" column="gender"/>
+            <result property="enableStratus" column="enable_stratus"/>
+            <result property="userType" column="user_type"/>
+            <result property="creatTime" column="creat_time"/>
+            <result property="lastEditTime" column="last_edit_time"/>
+        </collection>
+        <collection property="shopCategory" ofType="ShopCategory" column="shop_category_id">
+            <id property="shopCategoryId" column="shop_category_id"/>
+            <result property="shopCategoryName" column="shop_category_name"/>
+            <result property="shopCategoryDesc" column="shop_category_desc"/>
+            <result property="shopCategoryImg" column="shop_category_img"/>
+            <result property="priority" column="scpriority"/>
+            <result property="createTime" column="sccreat_time"/>
+            <result property="lastEditTime" column="sclast_edit_time"/>
+        </collection>
+    </resultMap>
+
+    <!--//查找店铺
+    Shop selectShop();-->
+    <select id="selectShop" resultMap="shopMap">
+        SELECT * FROM tb_shop
+    </select>
+
+    <select id="queryShopByShopId" resultMap="shopMap" parameterType="Long">
+        SELECT
+        s.shop_id,
+		s.shop_name,
+		s.shop_desc,
+		s.shop_addr,
+		s.phone,
+		s.shop_img,
+		s.priority,
+		s.create_time,
+		s.last_edit_time,
+		s.enable_status,
+		s.advice,
+		a.area_id,
+		a.area_name,
+		a.priority AS areapriority,
+		a.creat_time AS  areacreatTime,
+		a.last_edit_time AS arealast_edit_time,
+		sc.shop_category_id,
+		sc.shop_category_name,
+		sc.shop_category_desc,
+		sc.shop_category_img,
+		sc.priority as scpriority,
+		sc.last_edit_time as sclast_edit_time,
+		sc.creat_time as sccreat_time
+        FROM tb_shop s,tb_area a,tb_shop_category sc WHERE shop_id=#{shopId}
+        AND a.area_id = s.area_id AND s.shop_category_id = sc.shop_category_id
+    </select>
+
+    <select id="queryShopList" resultMap="shopMap">
+        SELECT
+        s.shop_id,
+		s.shop_name,
+		s.shop_desc,
+		s.shop_addr,
+		s.phone,
+		s.shop_img,
+		s.priority,
+		s.create_time,
+		s.last_edit_time,
+		s.enable_status,
+		s.advice,
+		a.area_id,
+		a.area_name,
+		a.priority AS areapriority,
+		a.creat_time AS  areacreatTime,
+		a.last_edit_time AS arealast_edit_time,
+		sc.shop_category_id,
+		sc.shop_category_name,
+		sc.shop_category_desc,
+		sc.shop_category_img,
+		sc.priority as scpriority,
+		sc.last_edit_time as sclast_edit_time,
+		sc.creat_time as sccreat_time
+        FROM tb_shop s,tb_area a,tb_shop_category sc
+        <where>
+            <if test="shopCondition.shopCategory != null and
+            shopCondition.shopCategory.shopCategoryId != null">
+                and  s.shop_category_id = #{shopCondition.shopCategory.shopCategoryId}
+            </if>
+            <if test="shopCondition.area != null and
+            shopCondition.area.areaId != null">
+                and  s.area_id = #{shopCondition.area.areaId}
+            </if>
+            <if test="shopCondition.shopName != null">
+                and s.shop_name LIKE '%#{shopCondition.shopName}%'
+            </if>
+            <if test="shopCondition.enableStatus != null">
+                and s.enable_status = #{shopCondition.enableStatus}
+            </if>
+            <if test="shopCondition.owner != null and shopCondition.owner.userId != null">
+                AND s.owner_id = #{shopCondition.owner.userId}
+            </if>
+            AND
+            a.area_id = s.area_id
+            AND
+            s.shop_category_id = sc.shop_category_id
+        </where>
+        ORDER BY
+        s.priority
+        DESC
+        limit #{rowIndex},#{pageSize}
+    </select>
+    
+    <select id="queryShopCount" resultType="int">
+        SELECT
+        count(1)
+        FROM tb_shop s,tb_area a,tb_shop_category sc
+        <where>
+            <if test="shopCondition.shopCategory != null and
+            shopCondition.shopCategory.shopCategoryId != null">
+                and  s.shop_category_id = #{shopCondition.shopCategory.shopCategoryId}
+            </if>
+            <if test="shopCondition.area != null and
+            shopCondition.area.areaId != null">
+                and  s.area_id = #{shopCondition.area.areaId}
+            </if>
+            <if test="shopCondition.shopName != null">
+                and s.shop_name LIKE '%#{shopCondition.shopName}%'
+            </if>
+            <if test="shopCondition.enableStatus != null">
+                and s.enable_status = #{shopCondition.enableStatus}
+            </if>
+            <if test="shopCondition.owner != null and shopCondition.owner.userId != null">
+                AND s.owner_id = #{shopCondition.owner.userId}
+            </if>
+            AND
+            a.area_id = s.area_id
+            AND
+            s.shop_category_id = sc.shop_category_id
+        </where>
+    </select>
+
+
+</mapper>
