@@ -22,7 +22,7 @@ public class AsciiPic {
                     final int index = Math.round(gray * (base.length() + 1) / 255);
                     System.out.print(index >= base.length() ? " " : String.valueOf(base.charAt(index)));
                 }
-                System.out.println();
+                System.out.println("我是dev");
             }
         } catch (final IOException e) {
             e.printStackTrace();
